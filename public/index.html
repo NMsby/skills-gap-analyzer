@@ -3,98 +3,546 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Powered Skills Gap Analyzer</title>
+    <title>SkillBridge AI - AI-Powered Skills Gap Analyzer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 min-h-screen">
-<!-- Header -->
-<header class="bg-blue-600 text-white p-4">
-    <div class="container mx-auto">
-        <h1 class="text-2xl font-bold">AI-Powered Skills Gap Analyzer</h1>
-        <p class="text-blue-100">Discover your skills gaps and accelerate your career</p>
-    </div>
-</header>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Main Content -->
-<main class="container mx-auto p-4">
-    <!-- Step 1: CV Upload -->
-    <section id="upload-section" class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4">Step 1: Upload Your CV</h2>
-        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
-            <p class="text-gray-600 mb-4">Drag and drop your CV here or click to select</p>
-            <input type="file" id="cv-upload" accept=".pdf,.doc,.docx,.jpg,.png" class="hidden">
-            <button id="select-file-btn" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                Select CV File
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        import * as tailwind from "dotenv";
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#2563eb',
+                        'secondary': '#1e40af',
+                        'accent': '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50">
+<!-- Navigation -->
+<nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
+    <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                    <i class="fas fa-brain text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold text-gray-800">SkillBridge AI</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#home" class="text-gray-600 hover:text-blue-600 transition-colors">Home</a>
+                <a href="#features" class="text-gray-600 hover:text-blue-600 transition-colors">Features</a>
+                <a href="#how-it-works" class="text-gray-600 hover:text-blue-600 transition-colors">How It Works</a>
+                <a href="#demo" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Try Demo</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden">
+                <i class="fas fa-bars text-gray-600"></i>
             </button>
         </div>
-        <div id="upload-status" class="mt-4 hidden">
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                <i class="fas fa-check-circle mr-2"></i>
-                <span id="upload-message"></span>
-            </div>
-        </div>
-    </section>
+    </div>
+</nav>
 
-    <!-- Step 2: Analysis Progress -->
-    <section id="analysis-section" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
-        <h2 class="text-xl font-semibold mb-4">Step 2: Analyzing Your Profile</h2>
-        <div class="space-y-4">
-            <div class="flex items-center">
-                <div id="extract-loader" class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
-                <span id="extract-status">Extracting skills from CV...</span>
-            </div>
-            <div class="flex items-center">
-                <div id="scan-loader" class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3 hidden"></div>
-                <span id="scan-status" class="text-gray-400">Scanning job market...</span>
-            </div>
-            <div class="flex items-center">
-                <div id="gap-loader" class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3 hidden"></div>
-                <span id="gap-status" class="text-gray-400">Analyzing skills gaps...</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Step 3: Results -->
-    <section id="results-section" class="hidden">
-        <!-- Skills Profile -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 class="text-xl font-semibold mb-4">Your Skills Profile</h2>
-            <div id="skills-profile" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Will be populated by JavaScript -->
-            </div>
-        </div>
-
-        <!-- Skills Gap Analysis -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 class="text-xl font-semibold mb-4">Skills Gap Analysis</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                    <canvas id="skills-gap-chart"></canvas>
+<!-- Hero Section -->
+<section id="home" class="gradient-bg text-white min-h-screen flex items-center relative overflow-hidden">
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="text-center lg:text-left">
+                <h1 class="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+                    Bridge Your
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+                            Skills Gap
+                        </span>
+                    with AI
+                </h1>
+                <p class="text-xl lg:text-2xl mb-8 text-gray-200 leading-relaxed">
+                    Discover exactly what skills you need for your dream job. Get personalized learning paths powered by real-time market data and cutting-edge AI.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <button onclick="scrollToDemo()" class="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Start Analysis
+                    </button>
+                    <button onclick="scrollToFeatures()" class="glass-effect text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/20 transition-all">
+                        <i class="fas fa-play mr-2"></i>
+                        Learn More
+                    </button>
                 </div>
-                <div id="gap-details">
-                    <!-- Gap details will be populated here -->
+                <div class="mt-12 grid grid-cols-3 gap-8 text-center">
+                    <div>
+                        <div class="text-3xl font-bold">500+</div>
+                        <div class="text-gray-300">Jobs Analyzed</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold">95%</div>
+                        <div class="text-gray-300">Accuracy Rate</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold">24/7</div>
+                        <div class="text-gray-300">Real-time Data</div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Learning Recommendations -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold mb-4">Recommended Learning Path</h2>
-            <div id="learning-recommendations">
-                <!-- Recommendations will be populated here -->
+            <div class="text-center lg:text-right">
+                <div class="relative">
+                    <div class="animate-float">
+                        <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
+                            <div class="space-y-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-upload text-white"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="font-semibold">Upload CV</div>
+                                        <div class="text-gray-300 text-sm">AI extracts your skills</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-search text-white"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="font-semibold">Market Analysis</div>
+                                        <div class="text-gray-300 text-sm">Real-time job scanning</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-chart-line text-white"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="font-semibold">Gap Analysis</div>
+                                        <div class="text-gray-300 text-sm">Personalized insights</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
-</main>
+    </div>
+    <!-- Floating Elements -->
+    <div class="absolute top-20 left-20 w-20 h-20 bg-yellow-400/20 rounded-full animate-pulse"></div>
+    <div class="absolute bottom-20 right-20 w-32 h-32 bg-purple-500/20 rounded-full animate-bounce"></div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl lg:text-5xl font-bold text-gray-800 mb-6">
+                Powered by <span class="text-blue-600">Mistral AI</span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Advanced AI technology meets real-world career insights to give you the competitive edge in today's job market.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="card-hover bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 text-center">
+                <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-eye text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">OCR Technology</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Advanced document scanning extracts skills from any CV format - PDF, Word, or image files.
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="card-hover bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8 text-center">
+                <div class="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-globe text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Real-Time Data</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Live job market scanning from Kenya's top job boards plus global remote opportunities.
+                </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="card-hover bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8 text-center">
+                <div class="bg-purple-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-brain text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">AI Gap Analysis</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Intelligent analysis identifies exactly what skills you're missing for your target roles.
+                </p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="card-hover bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-8 text-center">
+                <div class="bg-orange-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-route text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Learning Paths</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Personalized roadmaps with specific courses, timelines, and skill priorities.
+                </p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="card-hover bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-8 text-center">
+                <div class="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-chart-bar text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Salary Impact</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    See potential salary increases and career advancement opportunities for each skill.
+                </p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="card-hover bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl p-8 text-center">
+                <div class="bg-indigo-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-users text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Team Analytics</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Company dashboard to analyze workforce skills and identify team development needs.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl lg:text-5xl font-bold text-gray-800 mb-6">How It Works</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Our AI-powered platform analyzes your skills in minutes and provides actionable career insights.
+            </p>
+        </div>
+
+        <div class="relative">
+            <!-- Timeline Line -->
+            <div class="hidden lg:block absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-400 to-purple-600"></div>
+
+            <!-- Steps -->
+            <div class="space-y-12">
+                <!-- Step 1 -->
+                <div class="flex flex-col lg:flex-row items-center gap-8">
+                    <div class="lg:w-1/2 lg:pr-8 text-center lg:text-right">
+                        <div class="bg-white rounded-2xl p-8 card-hover">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">1. Upload Your CV</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Simply drag and drop your CV in any format. Our advanced OCR technology powered by Mistral AI extracts all your skills, experience, and qualifications instantly.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="lg:w-20 flex justify-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                            1
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 lg:pl-8">
+                        <div class="bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl p-8 h-48 flex items-center justify-center">
+                            <i class="fas fa-file-upload text-blue-600 text-6xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex flex-col lg:flex-row-reverse items-center gap-8">
+                    <div class="lg:w-1/2 lg:pl-8 text-center lg:text-left">
+                        <div class="bg-white rounded-2xl p-8 card-hover">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">2. Market Analysis</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Our AI scans thousands of current job postings from Kenya's top job boards and global remote opportunities to understand market demands.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="lg:w-20 flex justify-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                            2
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 lg:pr-8">
+                        <div class="bg-gradient-to-br from-green-100 to-green-200 rounded-2xl p-8 h-48 flex items-center justify-center">
+                            <i class="fas fa-search text-green-600 text-6xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex flex-col lg:flex-row items-center gap-8">
+                    <div class="lg:w-1/2 lg:pr-8 text-center lg:text-right">
+                        <div class="bg-white rounded-2xl p-8 card-hover">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">3. Gap Analysis</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Advanced AI compares your skills with market demands, identifying exactly what you're missing and prioritizing skills by impact and demand.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="lg:w-20 flex justify-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                            3
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 lg:pl-8">
+                        <div class="bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl p-8 h-48 flex items-center justify-center">
+                            <i class="fas fa-chart-line text-purple-600 text-6xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flex flex-col lg:flex-row-reverse items-center gap-8">
+                    <div class="lg:w-1/2 lg:pl-8 text-center lg:text-left">
+                        <div class="bg-white rounded-2xl p-8 card-hover">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">4. Get Your Roadmap</h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Receive a personalized learning path with specific courses, timelines, and potential salary impact to accelerate your career growth.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="lg:w-20 flex justify-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                            4
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 lg:pr-8">
+                        <div class="bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl p-8 h-48 flex items-center justify-center">
+                            <i class="fas fa-route text-orange-600 text-6xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Demo Section -->
+<section id="demo" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl lg:text-5xl font-bold text-gray-800 mb-6">Try SkillBridge AI</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Upload your CV and discover your skills gap in minutes. Get personalized recommendations to advance your career.
+            </p>
+        </div>
+
+        <!-- Demo Application Container -->
+        <div class="max-w-6xl mx-auto">
+            <!-- Step Indicator -->
+            <div class="flex justify-center mb-8">
+                <div class="flex items-center space-x-4">
+                    <div id="step-1-indicator" class="flex items-center">
+                        <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
+                        <span class="ml-2 text-gray-700 font-medium">Upload CV</span>
+                    </div>
+                    <div class="w-8 h-1 bg-gray-300 rounded"></div>
+                    <div id="step-2-indicator" class="flex items-center">
+                        <div class="w-10 h-10 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center font-bold">2</div>
+                        <span class="ml-2 text-gray-400 font-medium">Analysis</span>
+                    </div>
+                    <div class="w-8 h-1 bg-gray-300 rounded"></div>
+                    <div id="step-3-indicator" class="flex items-center">
+                        <div class="w-10 h-10 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center font-bold">3</div>
+                        <span class="ml-2 text-gray-400 font-medium">Results</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CV Upload Section -->
+            <div id="upload-section" class="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-gray-100">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Upload Your CV</h3>
+                <div id="drop-zone" class="border-3 border-dashed border-blue-300 rounded-2xl p-12 text-center hover:border-blue-500 transition-colors cursor-pointer bg-blue-50/50">
+                    <div class="mb-6">
+                        <i class="fas fa-cloud-upload-alt text-6xl text-blue-400 mb-4"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-700 mb-2">Drag and drop your CV here</h4>
+                    <p class="text-gray-500 mb-6">or click to select a file</p>
+                    <input type="file" id="cv-upload" accept=".pdf,.doc,.docx,.jpg,.png" class="hidden">
+                    <button id="select-file-btn" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-folder-open mr-2"></i>
+                        Choose File
+                    </button>
+                    <p class="text-sm text-gray-400 mt-4">Supports PDF, DOC, DOCX, JPG, PNG (Max 5MB)</p>
+                </div>
+                <div id="upload-status" class="mt-6 hidden">
+                    <div class="bg-green-50 border border-green-200 text-green-800 px-6 py-4 rounded-xl flex items-center">
+                        <i class="fas fa-check-circle text-2xl mr-4"></i>
+                        <div>
+                            <div class="font-semibold">Upload Successful!</div>
+                            <div id="upload-message" class="text-sm opacity-80"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Progress Section -->
+            <div id="analysis-section" class="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-gray-100 hidden">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">AI Analysis in Progress</h3>
+                <div class="space-y-6">
+                    <div class="flex items-center p-4 bg-gray-50 rounded-xl">
+                        <div id="extract-loader" class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-4"></div>
+                        <div class="flex-1">
+                            <div class="font-semibold text-gray-800">Extracting Skills from CV</div>
+                            <div id="extract-status" class="text-sm text-gray-600">Using Mistral OCR to analyze your document...</div>
+                        </div>
+                        <div id="extract-check" class="hidden">
+                            <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center p-4 bg-gray-50 rounded-xl opacity-50">
+                        <div id="scan-loader" class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-4 hidden"></div>
+                        <div class="flex-1">
+                            <div class="font-semibold text-gray-800">Scanning Job Market</div>
+                            <div id="scan-status" class="text-sm text-gray-600">Analyzing current job postings and requirements...</div>
+                        </div>
+                        <div id="scan-check" class="hidden">
+                            <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center p-4 bg-gray-50 rounded-xl opacity-50">
+                        <div id="gap-loader" class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-4 hidden"></div>
+                        <div class="flex-1">
+                            <div class="font-semibold text-gray-800">Analyzing Skills Gaps</div>
+                            <div id="gap-status" class="text-sm text-gray-600">Identifying missing skills and generating recommendations...</div>
+                        </div>
+                        <div id="gap-check" class="hidden">
+                            <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results-section" class="hidden">
+                <!-- Skills Profile -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-gray-100">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Your Skills Profile</h3>
+                    <div id="skills-profile" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Skills Gap Analysis -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-gray-100">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Skills Gap Analysis</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <canvas id="skills-gap-chart" class="max-h-96"></canvas>
+                        </div>
+                        <div id="gap-details">
+                            <!-- Gap details will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Recommendations -->
+                <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Recommended Learning Path</h3>
+                    <div id="learning-recommendations">
+                        <!-- Recommendations will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="md:col-span-2">
+                <div class="flex items-center space-x-2 mb-4">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+                        <i class="fas fa-brain text-white text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold">SkillBridge AI</span>
+                </div>
+                <p class="text-gray-400 mb-4 max-w-md">
+                    Empowering careers through AI-driven skills analysis and personalized learning recommendations.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Product</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
+                    <li><a href="#demo" class="hover:text-white transition-colors">Demo</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Pricing</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">API</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Company</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 SkillBridge AI. Built with ❤️ for the Future of Work Hackathon.</p>
+            <p class="mt-2 text-sm">Powered by <span class="text-blue-400">Mistral AI</span> • Made in Kenya 🇰🇪</p>
+        </div>
+    </div>
+</footer>
 
 <!-- Loading Overlay -->
-<div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white p-8 rounded-lg text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p class="text-gray-600">Processing your CV with AI...</p>
+<div id="loading-overlay" class="fixed inset-0 bg-black/80 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-2xl p-8 text-center max-w-sm mx-4">
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mx-auto mb-4"></div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Processing with AI</h3>
+        <p class="text-gray-600">Analyzing your CV and scanning job market...</p>
     </div>
 </div>
 

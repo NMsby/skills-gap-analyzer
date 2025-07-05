@@ -1,0 +1,20 @@
+John Doe
+Software Developer
+
+EXPERIENCE:
+- 2 years at ABC Tech as Junior Developer
+- Built web applications using JavaScript and Python
+- Worked with databases and APIs
+
+SKILLS:
+- Programming: JavaScript, Python, HTML, CSS
+- Databases: SQL, MongoDB basics
+- Tools: Git, VS Code
+- Soft Skills: Team collaboration, problem-solving
+
+EDUCATION:
+- Bachelor's in Computer Science, University of Nairobi
+- Relevant coursework: Data Structures, Web Development
+
+CERTIFICATIONS:
+- Google Analytics Certified
