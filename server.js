@@ -3,6 +3,7 @@ const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const MistralClient = require('./src/mistral-client');
+const MistralChat = require('./src/chatbot')
 require('dotenv').config();
 
 const app = express();
@@ -10,6 +11,8 @@ const PORT = process.env.PORT || 3000;
 
 // Initialize Mistral client
 const mistralClient = new MistralClient(process.env.MISTRAL_API_KEY);
+const mistralChat = new MistralChat(process.env.MISTRAL_API_KEY);
+
 
 // Middleware
 app.use(cors());
@@ -136,7 +139,7 @@ app.post('/api/chat', async (req, res) => {
   const { message } = req.body;
 
   try {
-    const reply = await mistralClient.askAgent(message);
+    const reply = await mistralChat.askAgent(message);
     res.json({ reply });
   } catch (err) {
     console.error('Chatbot error:', err.message);
