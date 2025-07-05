@@ -547,5 +547,84 @@
 </div>
 
 <script src="script.js"></script>
+
+<!-- 📍 Chatbot Section -->
+<!-- Chatbot Toggle Button -->
+<button id="chatbotToggle" class="fixed bottom-4 right-4 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none">
+  💬
+</button>
+
+<!-- Chat Window -->
+<div id="chatWindow" class="hidden fixed bottom-20 right-4 z-50 flex flex-col bg-white border border-gray-300 rounded-lg shadow-xl w-80 h-96">
+  <div class="bg-blue-600 text-white px-4 py-2 rounded-t-lg flex justify-between items-center">
+    <h2 class="text-sm font-semibold">Career AI Assistant</h2>
+    <button onclick="chatWindow.classList.add('hidden')" class="text-white hover:text-gray-200 text-sm">✕</button>
+  </div>
+  <div id="chatMessages" class="flex-1 p-3 overflow-y-auto text-sm space-y-2 bg-gray-50"></div>
+  <form id="chatForm" class="flex p-2 border-t border-gray-300 gap-1">
+    <input
+      id="chatInput"
+      type="text"
+      placeholder="Ask me anything..."
+      class="flex-1 px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none"
+      required
+    />
+    <button type="submit" class="bg-blue-600 text-white px-3 rounded-md hover:bg-blue-700">
+      Send
+    </button>
+  </form>
+</div>
+<script>
+  const toggleBtn = document.getElementById('chatbotToggle');
+  const chatWindow = document.getElementById('chatWindow');
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  const chatMessages = document.getElementById('chatMessages');
+
+  // Toggle chatbot visibility
+  toggleBtn.addEventListener('click', () => {
+    chatWindow.classList.toggle('hidden');
+  });
+
+  // Handle form submission
+  chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const userMessage = chatInput.value.trim();
+    if (!userMessage) return;
+
+    // Append user message
+    chatMessages.innerHTML += `
+      <div class="text-right">
+        <span class="inline-block bg-blue-100 text-gray-800 p-2 rounded-lg max-w-xs">${userMessage}</span>
+      </div>`;
+    chatInput.value = '';
+
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage }),
+      });
+
+      const data = await res.json();
+      const aiReply = data.reply || 'Sorry, I couldn’t respond.';
+
+      // Append AI reply
+      chatMessages.innerHTML += `
+        <div class="text-left">
+          <span class="inline-block bg-gray-200 text-gray-900 p-2 rounded-lg max-w-xs">${aiReply}</span>
+        </div>`;
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    } catch (err) {
+      chatMessages.innerHTML += `
+        <div class="text-left text-red-500">Error: Unable to connect to AI</div>`;
+    }
+  });
+</script>
+
 </body>
 </html>
