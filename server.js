@@ -131,6 +131,20 @@ app.use((error, req, res, next) => {
     res.status(500).json({ error: error.message });
 });
 
+// chatbot
+app.post('/api/chat', async (req, res) => {
+  const { message } = req.body;
+
+  try {
+    const reply = await mistralClient.askAgent(message);
+    res.json({ reply });
+  } catch (err) {
+    console.error('Chatbot error:', err.message);
+    res.status(500).json({ reply: 'Oops! Something went wrong.' });
+  }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Open http://localhost:${PORT} to view the application`);

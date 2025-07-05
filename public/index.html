@@ -547,5 +547,73 @@
 </div>
 
 <script src="script.js"></script>
+<!-- 📍 Chatbot Section -->
+<section id="chatbot" class="fixed bottom-4 right-4 z-50">
+  <!-- Floating Button -->
+  <button id="chatbotToggle" class="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none">
+    💬
+  </button>
+
+  <!-- Chat Window -->
+  <div id="chatWindow" class="hidden flex flex-col bg-white border border-gray-300 rounded-lg shadow-xl w-80 h-96 mt-2">
+    <div class="bg-blue-600 text-white px-4 py-2 rounded-t-lg">
+      <h2 class="text-sm font-semibold">Career AI Assistant</h2>
+    </div>
+    <div id="chatMessages" class="flex-1 p-3 overflow-y-auto text-sm space-y-2 bg-gray-50"></div>
+    <form id="chatForm" class="flex p-2 border-t border-gray-300">
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Ask me anything..."
+        class="flex-1 px-3 py-1 text-sm border rounded-l-md focus:outline-none"
+        required
+      />
+      <button type="submit" class="bg-blue-600 text-white px-3 rounded-r-md hover:bg-blue-700">
+        Send
+      </button>
+    </form>
+  </div>
+</section>
+
+<script>
+  const toggleBtn = document.getElementById('chatbotToggle');
+  const chatWindow = document.getElementById('chatWindow');
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  const chatMessages = document.getElementById('chatMessages');
+
+  toggleBtn.addEventListener('click', () => {
+    chatWindow.classList.toggle('hidden');
+  });
+
+  chatForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const userMessage = chatInput.value.trim();
+    if (!userMessage) return;
+
+    // Display user message
+    chatMessages.innerHTML += `<div class="text-right"><span class="bg-blue-100 p-2 rounded">${userMessage}</span></div>`;
+    chatInput.value = '';
+
+    // Fetch AI response
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: userMessage })
+      });
+      const data = await res.json();
+
+      const aiReply = data.reply || 'Sorry, I couldn’t respond.';
+      chatMessages.innerHTML += `<div class="text-left"><span class="bg-gray-100 p-2 rounded">${aiReply}</span></div>`;
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    } catch (err) {
+      chatMessages.innerHTML += `<div class="text-left text-red-500">Error connecting to AI</div>`;
+    }
+  });
+</script>
+
 </body>
 </html>
