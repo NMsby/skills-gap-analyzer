@@ -1,0 +1,62 @@
+[
+  {
+    "jobId": "001",
+    "title": "Senior Software Developer",
+    "company": "Safaricom",
+    "location": "Nairobi, Kenya",
+    "salary": "KES 120,000 - 180,000",
+    "skills_required": ["JavaScript", "React", "Node.js", "MongoDB", "AWS", "Docker"],
+    "experience_level": "3-5 years",
+    "posted_date": "2025-07-04",
+    "source": "BrighterMonday",
+    "remote_option": false
+  },
+  {
+    "jobId": "002",
+    "title": "Full Stack Developer",
+    "company": "Equity Bank",
+    "location": "Nairobi, Kenya",
+    "salary": "KES 100,000 - 150,000",
+    "skills_required": ["Python", "Django", "PostgreSQL", "React", "Git", "Linux"],
+    "experience_level": "2-4 years",
+    "posted_date": "2025-07-03",
+    "source": "LinkedIn",
+    "remote_option": true
+  },
+  {
+    "jobId": "003",
+    "title": "Frontend Developer",
+    "company": "Jumia",
+    "location": "Nairobi, Kenya",
+    "salary": "KES 80,000 - 120,000",
+    "skills_required": ["React", "TypeScript", "Redux", "Webpack", "Jest", "CSS"],
+    "experience_level": "1-3 years",
+    "posted_date": "2025-07-02",
+    "source": "Indeed",
+    "remote_option": true
+  },
+  {
+    "jobId": "004",
+    "title": "Data Scientist",
+    "company": "KCB Bank",
+    "location": "Nairobi, Kenya",
+    "salary": "KES 110,000 - 160,000",
+    "skills_required": ["Python", "R", "SQL", "Machine Learning", "Pandas", "Tableau"],
+    "experience_level": "2-4 years",
+    "posted_date": "2025-07-01",
+    "source": "BrighterMonday",
+    "remote_option": false
+  },
+  {
+    "jobId": "005",
+    "title": "DevOps Engineer",
+    "company": "Cellulant",
+    "location": "Nairobi, Kenya",
+    "salary": "KES 130,000 - 200,000",
+    "skills_required": ["AWS", "Docker", "Kubernetes", "Jenkins", "Terraform", "Linux"],
+    "experience_level": "3-6 years",
+    "posted_date": "2025-06-30",
+    "source": "LinkedIn",
+    "remote_option": true
+  }
+]
