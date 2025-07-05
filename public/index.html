@@ -55,8 +55,8 @@
 </head>
 <body class="font-inter bg-gray-50">
 <!-- Navigation -->
-<nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
-    <div class="container mx-auto px-4 py-3">
+<nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
+    <div class="container mx-auto px-4 py-4"> <!-- Increased padding -->
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
@@ -78,8 +78,8 @@
 </nav>
 
 <!-- Hero Section -->
-<section id="home" class="gradient-bg text-white min-h-screen flex items-center relative overflow-hidden">
-    <div class="absolute inset-0 bg-black/20"></div>
+<section id="home" class="gradient-bg text-white min-h-screen flex items-center relative overflow-hidden pt-20">
+    <div class="absolute inset-0 bg-black/20 z-0"></div>
     <div class="container mx-auto px-4 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div class="text-center lg:text-left">
@@ -158,8 +158,8 @@
         </div>
     </div>
     <!-- Floating Elements -->
-    <div class="absolute top-20 left-20 w-20 h-20 bg-yellow-400/20 rounded-full animate-pulse"></div>
-    <div class="absolute bottom-20 right-20 w-32 h-32 bg-purple-500/20 rounded-full animate-bounce"></div>
+    <div class="absolute top-20 left-20 w-20 h-20 bg-yellow-400/20 rounded-full animate-pulse z-1"></div>
+    <div class="absolute bottom-20 right-20 w-32 h-32 bg-purple-500/20 rounded-full animate-bounce z-1"></div>
 </section>
 
 <!-- Features Section -->

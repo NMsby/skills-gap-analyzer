@@ -1,3 +1,73 @@
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+section {
+    position: relative;
+    z-index: 1;
+}
+
+#home {
+    min-height: 100vh;
+    padding-top: 80px; /* Account for fixed nav */
+    position: relative;
+    z-index: 2;
+}
+
+/* Fix features section */
+#features {
+    position: relative;
+    z-index: 3;
+    margin-top: 0;
+    padding-top: 5rem; /* 80px */
+    background: white;
+}
+
+/* Ensure proper stacking for all sections */
+#how-it-works {
+    position: relative;
+    z-index: 4;
+    background: #f9fafb;
+}
+
+#demo {
+    position: relative;
+    z-index: 5;
+    background: white;
+}
+
+.absolute {
+    z-index: 1;
+}
+
+.absolute {
+    z-index: 1;
+}
+
+/* Ensure gradient background doesn't overflow */
+.gradient-bg {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    #home {
+        padding-top: 70px;
+        min-height: calc(100vh - 70px);
+    }
+
+    #features {
+        padding-top: 3rem;
+    }
+}
+
 /* Additional custom styles */
 .bg-pattern {
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Ccircle cx='5' cy='5' r='4'/%3E%3Ccircle cx='55' cy='55' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
@@ -78,6 +148,15 @@
     .feature-grid {
         grid-template-columns: 1px;
         gap: 1rem;
+    }
+
+    #home {
+        padding-top: 70px;
+        min-height: calc(100vh - 70px);
+    }
+
+    #features {
+        padding-top: 3rem;
     }
 }
 
