@@ -11,10 +11,17 @@ const PORT = process.env.PORT || 3000;
 // Initialize Mistral client
 const mistralClient = new MistralClient(process.env.MISTRAL_API_KEY);
 
+// landing page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'landing.html'));
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+
+
 
 // File upload configuration
 const storage = multer.diskStorage({
